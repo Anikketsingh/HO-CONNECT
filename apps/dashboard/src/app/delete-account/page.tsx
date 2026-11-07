@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getSupportEmail } from '@/lib/contact';
 
 export const metadata: Metadata = { title: 'Delete your HO Connect account' };
 
+// The support email comes from Settings → General; the page refreshes it at most every 5 minutes.
+export const revalidate = 300;
+
 /** Public page describing how to delete an account. Google Play requires a web link for this. */
-export default function DeleteAccountPage() {
+export default async function DeleteAccountPage() {
+  const email = await getSupportEmail();
   return (
     <main className="mx-auto max-w-2xl px-5 py-12">
-      <p className="rounded-xl border border-brass bg-brass-soft/30 px-4 py-3 text-sm font-medium text-espresso">
-        DRAFT: have this text reviewed, and add the support email, before publishing the app.
-      </p>
-      <h1 className="mt-8 font-display text-4xl text-espresso">Delete your HO Connect account</h1>
+      <h1 className="font-display text-4xl text-espresso">Delete your HO Connect account</h1>
 
       <h2 className="mt-8 font-display text-2xl text-espresso">Partners</h2>
       <ol className="mt-2 list-decimal space-y-2 pl-5 leading-relaxed text-ink">
@@ -25,12 +27,20 @@ export default function DeleteAccountPage() {
         payout details, and records of sales, commissions and payouts, because tax and accounting law requires us to.
       </p>
       <p className="mt-3 leading-relaxed text-ink">
-        Can't open the app? Email [add support email] from the phone number you registered with.
+        Can't open the app? Email{' '}
+        <a href={`mailto:${email}`} className="text-primary underline">
+          {email}
+        </a>{' '}
+        with the phone number you registered with, and we will delete the account for you.
       </p>
 
       <h2 className="mt-8 font-display text-2xl text-espresso">Customers</h2>
       <p className="mt-2 leading-relaxed text-ink">
-        If a partner referred you and you want us to stop contacting you and erase your details, email [add support email] with your mobile number. We erase your name, number and
+        If a partner referred you and you want us to stop contacting you and erase your details, email{' '}
+        <a href={`mailto:${email}`} className="text-primary underline">
+          {email}
+        </a>{' '}
+        with your mobile number. We erase your name, number and
         notes.
       </p>
       <p className="mt-8 text-sm text-muted">

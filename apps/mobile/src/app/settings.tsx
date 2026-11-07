@@ -2,13 +2,14 @@ import { applicationDeletionSchema, partnerApplicationSchema } from '@hoc/shared
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Notice } from '@/components/form';
 import { Body, Button, Card, ScreenHeader } from '@/components/ui';
 import { LANGUAGES, t, useLanguage } from '@/i18n';
 import { api, errorMessage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { confirmAction } from '@/lib/confirm';
 import { WEB_URL } from '@/lib/config';
 import { supabase } from '@/lib/supabase';
 import { colors, fonts } from '@/theme';
@@ -55,16 +56,16 @@ export default function Settings() {
 
   function confirmDelete() {
     const partner = me?.kind === 'partner';
-    Alert.alert(
-      t('Delete my account?'),
-      partner
+    void confirmAction({
+      title: t('Delete my account?'),
+      message: partner
         ? t('The HairOriginals team will close your account. Your login, documents and contact details are removed. Records of sales, commissions and payouts are kept, as tax law requires. Any commission you are owed is settled first.')
         : t('Your login will be deleted now. You have not registered, so nothing else is stored.'),
-      [
-        { text: t('Cancel'), style: 'cancel' },
-        { text: partner ? t('Request deletion') : t('Delete'), style: 'destructive', onPress: () => void deleteAccount() },
-      ],
-    );
+      confirmLabel: partner ? t('Request deletion') : t('Delete'),
+      destructive: true,
+    }).then((ok) => {
+      if (ok) void deleteAccount();
+    });
   }
 
   return (

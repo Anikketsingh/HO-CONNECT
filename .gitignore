@@ -39,3 +39,6 @@ npm-debug.log*
 # next
 next-env.d.ts
 supabase/.temp/
+
+# firebase (Android push); uploaded to EAS as the GOOGLE_SERVICES_JSON file variable
+apps/mobile/google-services.json

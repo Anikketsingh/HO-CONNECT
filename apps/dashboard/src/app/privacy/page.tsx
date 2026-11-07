@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getSupportEmail } from '@/lib/contact';
 
 export const metadata: Metadata = { title: 'Privacy policy · HO Connect' };
 
@@ -12,14 +13,15 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-/** DRAFT privacy policy. Google Play needs a public URL for this. Have it reviewed by a lawyer before launch. */
-export default function PrivacyPage() {
+// The support email comes from Settings → General; the page refreshes it at most every 5 minutes.
+export const revalidate = 300;
+
+/** Privacy policy. Google Play links to this public URL. */
+export default async function PrivacyPage() {
+  const email = await getSupportEmail();
   return (
     <main className="mx-auto max-w-2xl px-5 py-12">
-      <p className="rounded-xl border border-brass bg-brass-soft/30 px-4 py-3 text-sm font-medium text-espresso">
-        DRAFT: this text has not been reviewed by a lawyer. Replace it with the approved policy, and add the support email, before publishing the app.
-      </p>
-      <h1 className="mt-8 font-display text-4xl text-espresso">HO Connect privacy policy</h1>
+      <h1 className="font-display text-4xl text-espresso">HO Connect privacy policy</h1>
       <p className="mt-2 text-sm text-muted">HO Connect is run by Krisoriginals Private Limited (HairOriginals), "we".</p>
 
       <Section title="Who this is for">
@@ -70,7 +72,10 @@ export default function PrivacyPage() {
           . We remove your login, documents and contact details; records we must keep for tax are retained.
         </p>
         <p>
-          <b>Customers:</b> you can withdraw your consent at any time and ask us to erase your details by contacting us at [add support email]. We stop contacting you and
+          <b>Customers:</b> you can withdraw your consent at any time and ask us to erase your details by writing to{' '}
+          <a href={`mailto:${email}`} className="text-primary underline">
+            {email}
+          </a>. We stop contacting you and
           erase your name, number and notes.
         </p>
       </Section>
@@ -83,7 +88,13 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="Contact">
-        <p>Questions or requests: [add support email and address].</p>
+        <p>
+          Questions or requests: write to{' '}
+          <a href={`mailto:${email}`} className="text-primary underline">
+            {email}
+          </a>
+          . HO Connect is run by Krisoriginals Private Limited (HairOriginals).
+        </p>
       </Section>
     </main>
   );

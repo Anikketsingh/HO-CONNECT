@@ -780,6 +780,11 @@ export function createCommissionService({ db, now = () => new Date(), notify = n
 
     /* ───────────── Settings: general ───────────── */
 
+    /** Public: the support email shown on the privacy and account-deletion pages. */
+    async publicContact() {
+      return { supportEmail: (await loadSettings(db)).support_email };
+    },
+
     async getSettings() {
       return { values: (await loadSettings(db)) as unknown as Record<string, unknown>, defaults: DEFAULT_SETTINGS as unknown as Record<string, unknown> };
     },

@@ -1,0 +1,45 @@
+# Deploys the API to Fly.io when API code changes on main (the dashboard redeploys itself through Vercel).
+# Needs the repository secret FLY_API_TOKEN:  fly tokens create deploy -a ho-connect-api | gh secret set FLY_API_TOKEN
+name: Deploy API to Fly.io
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/api/**
+      - packages/**
+      - Dockerfile
+      - .dockerignore
+      - fly.toml
+      - package.json
+      - package-lock.json
+      - .github/workflows/fly-deploy.yml
+  workflow_dispatch: {}
+
+# One deploy at a time; a newer push waits rather than cancelling a deploy halfway.
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test -w @hoc/shared -w @hoc/api
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      # --ha=false keeps exactly one machine: the API's background jobs must run in a single instance.
+      - run: flyctl deploy --remote-only --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

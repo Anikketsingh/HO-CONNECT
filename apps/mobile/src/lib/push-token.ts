@@ -5,8 +5,12 @@ import { apiSend } from './api';
 
 const TOKEN_KEY = 'hoc-push-token';
 
-/** Remote push does not work in Expo Go on Android (since SDK 53). It needs a development or release build. */
-export const pushSupported = !(Constants.executionEnvironment === ExecutionEnvironment.StoreClient && Platform.OS === 'android');
+/**
+ * Remote push does not work in Expo Go on Android (since SDK 53); it needs a development or release build.
+ * The web version of the app has no push notifications.
+ */
+export const pushSupported =
+  Platform.OS !== 'web' && !(Constants.executionEnvironment === ExecutionEnvironment.StoreClient && Platform.OS === 'android');
 
 /** Asks permission, gets this phone's push token, and tells the API. Quietly does nothing where push isn't available. */
 export async function registerForPush(): Promise<void> {

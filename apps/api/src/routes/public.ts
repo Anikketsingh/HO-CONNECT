@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import {
   publicConfirmResponseSchema,
   publicConfirmSchema,
+  publicContactSchema,
   publicLeadInputSchema,
   publicLeadResponseSchema,
   publicReferralSchema,
@@ -9,6 +10,7 @@ import {
 } from '@hoc/shared';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
+import type { CommissionService } from '../services/commissions';
 import type { EarningsService } from '../services/earnings';
 import type { LeadService } from '../services/leads';
 
@@ -19,7 +21,17 @@ const idParams = z.object({ id: z.uuid() });
  * The customer-facing QR / link page. No login, so everything is rate-limited per IP, and the
  * service adds per-phone and daily caps. Customers are asked to confirm by OTP before anything counts.
  */
-export const publicRoutes: FastifyPluginAsyncZod<{ leads: LeadService; earnings: EarningsService }> = async (app, { leads, earnings }) => {
+export const publicRoutes: FastifyPluginAsyncZod<{ leads: LeadService; earnings: EarningsService; commissions: CommissionService }> = async (
+  app,
+  { leads, earnings, commissions },
+) => {
+  /** Support email for the public privacy and account-deletion pages. */
+  app.get(
+    '/public/contact',
+    { config: { rateLimit: { max: 60, timeWindow: '1 minute' } }, schema: { response: { 200: publicContactSchema } } },
+    async (_req, reply) => reply.header('Cache-Control', 'public, max-age=300').send(await commissions.publicContact()),
+  );
+
   app.get(
     '/public/referral/:code',
     { config: { rateLimit: { max: 60, timeWindow: '1 minute' } }, schema: { params: codeParams, response: { 200: publicReferralSchema } } },

@@ -32,6 +32,8 @@ export const settingsSchema = z.object({
   /** Partner-facing label overrides; any label not overridden falls back to the default. */
   stage_labels: z.partialRecord(z.enum(LEAD_STAGES), z.string().min(1).max(80)),
   customer_type_labels: z.partialRecord(z.enum(CUSTOMER_TYPES), z.string().min(1).max(80)),
+  /** Where partners and customers write for privacy and account-deletion requests (shown on the public pages). */
+  support_email: z.email('Enter a valid email').max(200),
 });
 
 /** Resolved settings: label maps are always complete after merging with the defaults. */
@@ -55,6 +57,7 @@ export const DEFAULT_SETTINGS: Settings = {
   max_public_leads_per_day: 200,
   stage_labels: DEFAULT_STAGE_LABELS,
   customer_type_labels: DEFAULT_CUSTOMER_TYPE_LABELS,
+  support_email: 'aniket.kushwaha@hairoriginals.com',
 };
 
 /** Merges stored rows over the defaults, ignoring unknown or invalid keys. */

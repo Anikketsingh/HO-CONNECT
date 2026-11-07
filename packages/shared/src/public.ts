@@ -35,5 +35,9 @@ export const publicLeadResponseSchema = z.object({
   expiresAt: z.string(),
   devCode: z.string().optional(),
 });
+/** Contact details for the public privacy and account-deletion pages (Settings → General → Support email). */
+export const publicContactSchema = z.object({ supportEmail: z.string() });
+export type PublicContact = z.infer<typeof publicContactSchema>;
+
 export const publicConfirmSchema = consentCodeSchema;
 export const publicConfirmResponseSchema = z.object({ confirmed: z.literal(true) });

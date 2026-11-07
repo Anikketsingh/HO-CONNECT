@@ -114,7 +114,7 @@ export async function buildApp(deps: AppDeps) {
   await app.register(adminOpsRoutes, { prefix: '/v1', reports: deps.reports, team: deps.team, privacy: deps.privacy });
   await app.register(adminQrCodeRoutes, { prefix: '/v1', qrCodes: deps.qrCodes });
   await app.register(privacyRoutes, { prefix: '/v1', privacy: deps.privacy });
-  await app.register(publicRoutes, { prefix: '/v1', leads: deps.leads, earnings: deps.earnings });
+  await app.register(publicRoutes, { prefix: '/v1', leads: deps.leads, earnings: deps.earnings, commissions: deps.commissions });
 
   return app;
 }

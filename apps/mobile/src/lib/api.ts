@@ -1,8 +1,8 @@
 import { apiErrorSchema } from '@hoc/shared';
-import { File } from 'expo-file-system';
 import { API_URL } from './config';
 import { t } from '@/i18n';
 import { supabase } from './supabase';
+import { appendFile } from './upload-part';
 
 export class ApiError extends Error {
   constructor(
@@ -73,10 +73,8 @@ export async function uploadFile<T>(
   file: { uri: string; name: string; mimeType: string },
   schema: Parser<T>,
 ): Promise<T> {
-  // Expo's fetch only accepts Blob-like parts, not React Native's old { uri, name, type } objects.
-  // expo-file-system's File implements Blob and reads the file when the request is sent.
   const form = new FormData();
-  form.append('file', new File(file.uri) as unknown as Blob);
+  await appendFile(form, file);
   return api(path, schema, { method: 'POST', form, timeoutMs: 60_000 });
 }
 

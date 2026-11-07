@@ -3,11 +3,12 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Notice, StepHeader } from '@/components/form';
 import { Button, Card } from '@/components/ui';
 import { apiSend, errorMessage, uploadFile } from '@/lib/api';
+import { confirmAction } from '@/lib/confirm';
 import { useRegistration } from '@/lib/registration';
 import { colors, fonts } from '@/theme';
 import { t } from '@/i18n';
@@ -74,25 +75,17 @@ function ChecklistItem({ item, onChanged }: { item: Item; onChanged: () => Promi
     }
   }
 
-  function remove(id: string, name: string) {
-    Alert.alert(t('Remove this file?'), name, [
-      { text: t('Cancel'), style: 'cancel' },
-      {
-        text: t('Remove'),
-        style: 'destructive',
-        onPress: async () => {
-          setBusy(true);
-          try {
-            await apiSend(`/v1/partner/application/documents/${id}`, { method: 'DELETE' });
-            await onChanged();
-          } catch (e) {
-            setError(errorMessage(e));
-          } finally {
-            setBusy(false);
-          }
-        },
-      },
-    ]);
+  async function remove(id: string, name: string) {
+    if (!(await confirmAction({ title: t('Remove this file?'), message: name, confirmLabel: t('Remove'), destructive: true }))) return;
+    setBusy(true);
+    try {
+      await apiSend(`/v1/partner/application/documents/${id}`, { method: 'DELETE' });
+      await onChanged();
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -118,7 +111,7 @@ function ChecklistItem({ item, onChanged }: { item: Item; onChanged: () => Promi
               {d.status === 'rejected' && d.reviewerNote ? <Text style={styles.note}>{d.reviewerNote}</Text> : null}
             </View>
             {d.status !== 'accepted' ? (
-              <Pressable onPress={() => remove(d.id, d.fileName)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('Remove {name}', { name: d.fileName })}>
+              <Pressable onPress={() => void remove(d.id, d.fileName)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('Remove {name}', { name: d.fileName })}>
                 <Text style={styles.remove}>{t("Remove")}</Text>
               </Pressable>
             ) : null}

@@ -49,6 +49,7 @@ export default function GeneralSettingsPage() {
         f[n.key] = n.unit === 'rupees' ? paiseToInput(v) : n.unit === 'percent' ? String(v / 100) : String(v);
       }
       for (const sw of SWITCHES) f[sw.key] = Boolean(s.values[sw.key]);
+      f.support_email = String(s.values.support_email ?? '');
       setForm(f);
       setStageLabels({ ...(s.values.stage_labels as Record<string, string>) });
       setTypeLabels({ ...(s.values.customer_type_labels as Record<string, string>) });
@@ -72,6 +73,8 @@ export default function GeneralSettingsPage() {
       if (v !== saved[n.key]) body[n.key] = v;
     }
     for (const sw of SWITCHES) if (form[sw.key] !== saved[sw.key]) body[sw.key] = form[sw.key];
+    const supportEmail = String(form.support_email ?? '').trim();
+    if (supportEmail !== saved.support_email) body.support_email = supportEmail;
     // Store only labels that differ from the default wording.
     const diff = (cur: Record<string, string>, def: Record<string, string>) =>
       Object.fromEntries(Object.entries(cur).filter(([k, v]) => v.trim() && v.trim() !== def[k]).map(([k, v]) => [k, v.trim()]));
@@ -135,6 +138,25 @@ export default function GeneralSettingsPage() {
                 </span>
               </label>
             ))}
+          </div>
+        </Card>
+
+        <Card className="p-5">
+          <h2 className="font-semibold text-espresso">Contact</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <Labeled label="Support email">
+              <input
+                className={inputClass}
+                type="email"
+                autoComplete="off"
+                value={String(form.support_email ?? '')}
+                onChange={(e) => setForm({ ...form, support_email: e.target.value })}
+              />
+              <span className="font-normal">
+                Shown on the public privacy policy and account deletion pages (Google Play links to both) for privacy and deletion requests. Updates there within 5
+                minutes. Default {String(defaults.support_email)}.
+              </span>
+            </Labeled>
           </div>
         </Card>
 
