@@ -48,8 +48,8 @@ Production-only checks:
 
 Two services from this repository, each built from its own Dockerfile.
 
-**API** (`deploy/Dockerfile.api`)
-- New Railway service from the repo → Settings → set the Dockerfile path to `deploy/Dockerfile.api`; health check path `/health/ready`.
+**API** (`Dockerfile` at the repo root)
+- New Railway service from the repo → Settings → set the Dockerfile path to `Dockerfile`; health check path `/health/ready`.
 - Variables (see `.env.example` for the meaning of each): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`
   (the Supabase **session pooler**, port 5432), `DATA_ENCRYPTION_KEY` (generate a new one; **keep a safe copy: if it is lost,
   stored PAN and bank details cannot be decrypted**), `NODE_ENV=production`, `OTP_PROVIDER=nimbus` with the four `NIMBUS_*`

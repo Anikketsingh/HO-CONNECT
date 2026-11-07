@@ -1,5 +1,5 @@
-# HO Connect API. Build from the repo root:  docker build -f deploy/Dockerfile.api -t ho-connect-api .
-# Runs on Railway: health check path /health/ready, port from $PORT.
+# HO Connect API (the root Dockerfile is the API: Fly.io's GitHub launcher only looks for ./Dockerfile).
+# Build from the repo root:  docker build -t ho-connect-api .   Deployed on Fly.io (fly.toml); health check /health/ready.
 FROM node:22-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.base.json ./

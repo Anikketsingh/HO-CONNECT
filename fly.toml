@@ -6,7 +6,7 @@ app = "ho-connect-api"
 primary_region = "sin"            # Singapore: closest Fly region to India and to the Supabase database (Mumbai)
 
 [build]
-  dockerfile = "deploy/Dockerfile.api"   # build context is the repo root, as the Dockerfile expects
+  dockerfile = "Dockerfile"   # the API image; build context is the repo root
 
 [env]
   NODE_ENV = "production"
