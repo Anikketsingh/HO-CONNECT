@@ -3,7 +3,7 @@
 # set them with `fly secrets` or Dashboard → app → Secrets. This file is committed to git.
 
 app = "ho-connect-api"
-primary_region = "bom"            # Mumbai
+primary_region = "sin"            # Singapore: closest Fly region to India and to the Supabase database (Mumbai)
 
 [build]
   dockerfile = "deploy/Dockerfile.api"   # build context is the repo root, as the Dockerfile expects
