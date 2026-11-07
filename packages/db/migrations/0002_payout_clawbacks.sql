@@ -1,0 +1,3 @@
+ALTER TABLE "commission_entries" ADD COLUMN "clawback_payout_id" uuid;--> statement-breakpoint
+ALTER TABLE "payouts" ADD COLUMN "clawback_paise" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "commission_entries" ADD CONSTRAINT "commission_entries_clawback_payout_id_payouts_id_fk" FOREIGN KEY ("clawback_payout_id") REFERENCES "public"."payouts"("id") ON DELETE no action ON UPDATE no action;

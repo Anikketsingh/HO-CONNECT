@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+
+/* HairOriginals brand tokens (plan section 17). */
+@theme {
+  --color-primary: #905254;
+  --color-primary-deep: #7a4346;
+  --color-logo: #b9585b;
+  --color-espresso: #1f1613;
+  --color-ink: #2a2124;
+  --color-muted: #6b5f5c;
+  --color-brass: #c9a24a;
+  --color-brass-soft: #e9d7a6;
+  --color-blush: #f7efec;
+  --color-paper: #fffcfa;
+  --color-line: #e8ddd8;
+  --color-sage: #5f9585;
+  --color-danger: #b3261e;
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bodoni), ui-serif, Georgia, serif;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

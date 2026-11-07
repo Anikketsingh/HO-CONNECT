@@ -1,0 +1,12 @@
+{
+  // Type-checks the send-sms hook (Deno code with .ts imports) and its Node tests.
+  // index.ts is left out because it uses the Deno global; it only wires handler.ts to Deno.serve.
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"]
+  },
+  "include": ["functions/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["functions/**/index.ts"]
+}

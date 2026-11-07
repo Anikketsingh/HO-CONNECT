@@ -1,0 +1,12 @@
+# Supabase CLI config for HO Connect.
+#
+# Used only to deploy Edge Functions to the hosted project. The database schema
+# is managed by Drizzle (packages/db/migrations), not supabase/migrations, and
+# there is no local Supabase stack. Auth settings are made in the dashboard
+# (README → "Partner SMS login (Nimbus)").
+project_id = "ho-connect"
+
+# Called by Supabase Auth, not by a logged-in user, so there is no user JWT to
+# check. The function verifies the Standard Webhooks signature instead.
+[functions.send-sms]
+verify_jwt = false

@@ -1,0 +1,31 @@
+{
+  "name": "ho-connect",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:api": "npm run dev -w @hoc/api",
+    "dev:dashboard": "npm run dev -w @hoc/dashboard",
+    "dev:mobile": "npm run start -w @hoc/mobile",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck && tsc -p supabase",
+    "test": "turbo run test && vitest run --root supabase",
+    "db:generate": "npm run generate -w @hoc/db",
+    "db:migrate": "npm run migrate -w @hoc/db",
+    "db:seed": "npm run seed -w @hoc/db",
+    "db:studio": "npm run studio -w @hoc/db"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "turbo": "^2.11.10",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "packageManager": "npm@11.17.0"
+}
