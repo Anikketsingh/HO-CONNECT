@@ -1,0 +1,35 @@
+# HO Connect API on Fly.io. Only the API is deployed here (the dashboard is on Vercel).
+# Secrets (Supabase keys, DATABASE_URL, DATA_ENCRYPTION_KEY, Nimbus, CORS/web URLs) are NOT in this file:
+# set them with `fly secrets` or Dashboard → app → Secrets. This file is committed to git.
+
+app = "ho-connect-api"
+primary_region = "bom"            # Mumbai
+
+[build]
+  dockerfile = "deploy/Dockerfile.api"   # build context is the repo root, as the Dockerfile expects
+
+[env]
+  NODE_ENV = "production"
+  PORT = "4000"
+  PUSH_PROVIDER = "expo"
+
+[http_service]
+  internal_port = 4000
+  force_https = true
+  # The API runs its lead-expiry and commission-hold jobs every 10 minutes in-process,
+  # so the machine must never be stopped for being idle.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health/ready"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
